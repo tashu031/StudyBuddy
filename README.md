@@ -1,5 +1,8 @@
 # 🎓 StudyBuddy App
 
+> 🚀 **Live Demo:** [https://tashu031.github.io/StudyBuddy/](https://tashu031.github.io/StudyBuddy/)  
+> 💻 **GitHub Repository:** [https://github.com/tashu031/StudyBuddy](https://github.com/tashu031/StudyBuddy)
+
 A simple, beautiful, and distraction-free study companion with a **Pomodoro Timer**, interactive **Flashcards**, and an automatic **Knowledge Check Quiz**.
 
 ---
@@ -42,10 +45,14 @@ A simple, beautiful, and distraction-free study companion with a **Pomodoro Time
 
 ## 🚀 How to Run & View the App
 
-### Option A: Open directly in your browser
+### Option A: 🌐 Use the Live Web App (Instant)
+Try StudyBuddy directly in your browser with zero install or setup:  
+👉 **[https://tashu031.github.io/StudyBuddy/](https://tashu031.github.io/StudyBuddy/)**
+
+### Option B: Open directly from local files
 Simply double-click `index.html` or open it with your favorite browser (Chrome, Edge, Firefox, Brave).
 
-### Option B: Run via Local Server (Recommended)
+### Option C: Run via Local Server (Recommended for development)
 You can double-click `start.bat` or run:
 ```bash
 python -m http.server 3000
