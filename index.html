@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyBuddy - Your Focus & Learning Companion</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body class="theme-light">
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+            <path d="M6 6h10"></path>
+            <path d="M6 10h10"></path>
+            <path d="m9 16 2 2 4-4"></path>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">StudyBuddy</h1>
+          <p class="brand-subtitle">Pomodoro • Flashcards • Quiz</p>
+        </div>
+      </div>
+
+      <nav class="nav-tabs" role="tablist">
+        <button class="nav-tab active" data-tab="pomodoro" role="tab" id="tab-pomodoro">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Pomodoro</span>
+        </button>
+        <button class="nav-tab" data-tab="flashcards" role="tab" id="tab-flashcards">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="14" x="3" y="5" rx="2"></rect>
+            <path d="M21 8H3"></path>
+            <path d="M7 12h2"></path>
+          </svg>
+          <span>Flashcards</span>
+        </button>
+        <button class="nav-tab" data-tab="quiz" role="tab" id="tab-quiz">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span>Quick Quiz</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <button id="themeToggle" class="icon-btn" title="Toggle Theme" aria-label="Toggle Theme">
+          <span class="icon-moon">🌙</span>
+          <span class="icon-sun">☀️</span>
+        </button>
+        <button id="soundToggle" class="icon-btn" title="Toggle Audio Chimes" aria-label="Toggle Audio">
+          <span id="soundIcon">🔔</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Quick Stats Bar -->
+    <aside class="stats-bar">
+      <div class="stat-pill">
+        <span class="stat-label">Focus Time</span>
+        <span class="stat-value" id="statFocusTime">0m</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Pomodoros</span>
+        <span class="stat-value" id="statSessions">0</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Cards Mastered</span>
+        <span class="stat-value" id="statMastered">0</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Quiz Best</span>
+        <span class="stat-value" id="statQuizScore">-</span>
+      </div>
+    </aside>
+
+    <!-- Main Views Container -->
+    <main class="main-content">
+      <!-- 1. POMODORO VIEW -->
+      <section id="view-pomodoro" class="view-panel active">
+        <div class="pomodoro-grid">
+          <!-- Timer Card -->
+          <div class="card timer-card">
+            <!-- Mode Switcher -->
+            <div class="timer-mode-selector">
+              <button class="mode-pill active" data-mode="work" data-time="25">Focus (25m)</button>
+              <button class="mode-pill" data-mode="shortBreak" data-time="5">Short Break (5m)</button>
+              <button class="mode-pill" data-mode="longBreak" data-time="15">Long Break (15m)</button>
+            </div>
+
+            <!-- Circular Progress & Display -->
+            <div class="timer-visual-container">
+              <svg class="progress-ring" viewBox="0 0 260 260">
+                <circle class="progress-ring-bg" cx="130" cy="130" r="110"></circle>
+                <circle class="progress-ring-circle" id="timerProgressRing" cx="130" cy="130" r="110"></circle>
+              </svg>
+              <div class="timer-display-inner">
+                <div class="timer-status-badge" id="timerModeBadge">Focus Session</div>
+                <div class="timer-digits" id="timerDigits">25:00</div>
+                <div class="timer-cycle-count" id="timerCycleInfo">Cycle: 1 of 4</div>
+              </div>
+            </div>
+
+            <!-- Timer Controls -->
+            <div class="timer-controls">
+              <button id="btnTimerAdjustMinus" class="btn btn-outline" title="Subtract 1 minute">-1m</button>
+              <button id="btnTimerStart" class="btn btn-primary btn-large">
+                <span id="startBtnIcon">▶</span>
+                <span id="startBtnText">Start Focus</span>
+              </button>
+              <button id="btnTimerReset" class="btn btn-outline" title="Reset Timer">
+                <span>↺</span> Reset
+              </button>
+              <button id="btnTimerAdjustPlus" class="btn btn-outline" title="Add 1 minute">+1m</button>
+            </div>
+
+            <!-- Ambient Sound Generator -->
+            <div class="ambient-player">
+              <div class="ambient-header">
+                <span>🎧 Ambient Study Sounds (Synthesized Offline)</span>
+              </div>
+              <div class="ambient-buttons">
+                <button class="ambient-btn active" data-sound="none">Mute</button>
+                <button class="ambient-btn" data-sound="rain">🌧️ Soft Rain</button>
+                <button class="ambient-btn" data-sound="whitenoise">💨 White Noise</button>
+                <button class="ambient-btn" data-sound="binaural">🧘 Focus Waves</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Session Task Card -->
+          <div class="card task-card">
+            <h2 class="card-title">
+              <span>🎯 Current Focus Goal</span>
+            </h2>
+            <p class="card-subtitle">What are you working on right now?</p>
+            
+            <form id="taskForm" class="task-form">
+              <input type="text" id="taskInput" placeholder="e.g., Read chapter 4, review React state..." maxlength="80" required>
+              <button type="submit" class="btn btn-secondary">Set Goal</button>
+            </form>
+
+            <div class="active-goal-box" id="activeGoalBox">
+              <input type="checkbox" id="goalCompleteCheckbox" class="goal-checkbox">
+              <label for="goalCompleteCheckbox" id="activeGoalText" class="goal-label">Practice JavaScript flashcards</label>
+              <button id="btnDeleteGoal" class="icon-btn-small" title="Clear Goal">✕</button>
+            </div>
+
+            <div class="study-tips-box">
+              <h3>💡 Study Buddy Tips</h3>
+              <ul class="tips-list">
+                <li><strong>25 / 5 Rule:</strong> 25 minutes of unbroken attention, then 5 minutes of physical rest.</li>
+                <li><strong>Active Recall:</strong> Test yourself using the Flashcards tab rather than re-reading notes.</li>
+                <li><strong>Spaced Testing:</strong> Take the Quiz after each 2 pomodoro sessions to lock memories in.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. FLASHCARDS VIEW -->
+      <section id="view-flashcards" class="view-panel">
+        <div class="flashcards-container">
+          <!-- Flashcards Toolbar -->
+          <div class="flashcards-toolbar">
+            <div class="deck-selector-wrap">
+              <label for="deckSelect" class="form-label">Study Deck:</label>
+              <select id="deckSelect" class="select-input"></select>
+            </div>
+
+            <div class="toolbar-actions">
+              <button id="btnNewCardModal" class="btn btn-secondary btn-sm">
+                <span>+</span> Add Card
+              </button>
+              <button id="btnNewDeckModal" class="btn btn-outline btn-sm">
+                <span>📁</span> New Deck
+              </button>
+              <button id="btnShuffleDeck" class="btn btn-outline btn-sm" title="Shuffle Cards">
+                <span>🔀</span> Shuffle
+              </button>
+              <button id="btnResetMastery" class="btn btn-outline btn-sm" title="Reset Learned Status">
+                <span>🔄</span> Reset Marks
+              </button>
+            </div>
+          </div>
+
+          <!-- Card Count & Deck Progress -->
+          <div class="deck-progress-bar-wrap">
+            <div class="deck-progress-info">
+              <span id="deckCardCountText">Card 1 of 6</span>
+              <span id="deckMasteryPercent">0% Mastered</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill" id="deckProgressBar" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <!-- 3D Flip Flashcard -->
+          <div class="flashcard-scene" id="flashcardScene" tabindex="0" role="button" aria-label="Click to flip card">
+            <div class="flashcard" id="flashcardElement">
+              <!-- Front Side -->
+              <div class="card-face card-front">
+                <div class="card-face-header">
+                  <span class="card-badge" id="cardCategoryBadge">Front</span>
+                  <span class="card-status-pill" id="cardStatusPill">Needs Practice</span>
+                </div>
+                <div class="card-face-body">
+                  <p class="card-prompt-text" id="cardFrontText">Loading question...</p>
+                </div>
+                <div class="card-face-footer">
+                  <span class="hint-text">👆 Click or Press Spacebar to Flip</span>
+                </div>
+              </div>
+
+              <!-- Back Side -->
+              <div class="card-face card-back">
+                <div class="card-face-header">
+                  <span class="card-badge card-badge-back">Answer</span>
+                  <span class="card-status-pill" id="cardStatusPillBack">Needs Practice</span>
+                </div>
+                <div class="card-face-body">
+                  <p class="card-answer-text" id="cardBackText">Loading answer...</p>
+                </div>
+                <div class="card-face-footer">
+                  <span class="hint-text">👆 Click to Flip Back</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Flashcard Navigation & Mastery Controls -->
+          <div class="flashcard-controls">
+            <button id="btnPrevCard" class="btn btn-outline">
+              <span>←</span> Prev
+            </button>
+
+            <div class="mastery-actions">
+              <button id="btnMarkNeedsReview" class="btn btn-warning">
+                <span>⚠️</span> Still Learning
+              </button>
+              <button id="btnMarkKnown" class="btn btn-success">
+                <span>✓</span> Mastered!
+              </button>
+            </div>
+
+            <button id="btnNextCard" class="btn btn-outline">
+              Next <span>→</span>
+            </button>
+          </div>
+
+          <div class="card-manage-actions">
+            <button id="btnEditCurrentCard" class="btn-link">✏️ Edit Current Card</button>
+            <span class="divider">•</span>
+            <button id="btnDeleteCurrentCard" class="btn-link btn-danger-link">🗑️ Delete Card</button>
+            <span class="divider">•</span>
+            <button id="btnStartQuizFromDeck" class="btn-link btn-accent-link">📝 Test Deck in Quiz</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. QUIZ VIEW -->
+      <section id="view-quiz" class="view-panel">
+        <div class="quiz-container">
+          <!-- Quiz Setup Screen -->
+          <div id="quizSetupView" class="quiz-step-card card">
+            <div class="quiz-welcome">
+              <div class="quiz-hero-icon">🏆</div>
+              <h2 class="quiz-title">Knowledge Check Quiz</h2>
+              <p class="quiz-desc">Test your understanding with automatic multiple-choice questions dynamically generated from your study decks!</p>
+            </div>
+
+            <div class="quiz-options-grid">
+              <div class="form-group">
+                <label for="quizDeckSelect" class="form-label">Choose Deck to Test:</label>
+                <select id="quizDeckSelect" class="select-input"></select>
+              </div>
+
+              <div class="form-group">
+                <label for="quizQuestionCount" class="form-label">Number of Questions:</label>
+                <select id="quizQuestionCount" class="select-input">
+                  <option value="5">5 Questions (Quick Check)</option>
+                  <option value="10" selected>10 Questions (Standard)</option>
+                  <option value="15">15 Questions (Thorough)</option>
+                  <option value="all">All Available Cards</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="quiz-action-bar">
+              <button id="btnStartQuiz" class="btn btn-primary btn-large">
+                🚀 Start Quiz Now
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Question Screen -->
+          <div id="quizActiveView" class="quiz-step-card card" style="display: none;">
+            <div class="quiz-header-bar">
+              <div class="quiz-progress-text">
+                <span id="quizQuestionNumber">Question 1 of 10</span>
+                <span class="quiz-live-score" id="quizLiveScore">Score: 0</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="quizProgressBar" style="width: 10%"></div>
+              </div>
+            </div>
+
+            <div class="quiz-question-box">
+              <span class="quiz-question-tag" id="quizCategoryTag">Category</span>
+              <h3 class="quiz-question-text" id="quizQuestionPrompt">Question prompt goes here...</h3>
+            </div>
+
+            <!-- 4 Multiple Choice Options -->
+            <div class="quiz-options-list" id="quizOptionsList">
+              <!-- Dynamically populated buttons -->
+            </div>
+
+            <!-- Feedback Notification Box -->
+            <div class="quiz-feedback-box" id="quizFeedbackBox" style="display: none;">
+              <div class="feedback-indicator" id="feedbackIndicator">Correct!</div>
+              <div class="feedback-explanation" id="feedbackExplanation">Detailed explanation goes here.</div>
+              <button id="btnNextQuestion" class="btn btn-primary">
+                Next Question <span>→</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quiz Results Screen -->
+          <div id="quizResultView" class="quiz-step-card card" style="display: none;">
+            <div class="quiz-result-hero">
+              <div class="result-badge-icon" id="resultGradeIcon">🎉</div>
+              <h2 class="result-title" id="resultTitle">Great Job!</h2>
+              <div class="result-score-large" id="resultScoreLarge">80%</div>
+              <p class="result-summary-text" id="resultSummaryText">You got 8 out of 10 questions correct.</p>
+            </div>
+
+            <div class="quiz-results-breakdown" id="quizResultsBreakdown">
+              <!-- Review of all answered questions -->
+            </div>
+
+            <div class="quiz-result-actions">
+              <button id="btnRetakeQuiz" class="btn btn-primary">
+                🔄 Retake Quiz
+              </button>
+              <button id="btnBackToCards" class="btn btn-outline">
+                🗂️ Study Deck Flashcards
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Modal: Add / Edit Flashcard -->
+    <div class="modal-backdrop" id="cardModal" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3 id="cardModalTitle">Add New Flashcard</h3>
+          <button class="modal-close-btn" id="btnCloseCardModal">✕</button>
+        </div>
+        <form id="cardForm" class="modal-body">
+          <input type="hidden" id="editCardId" value="">
+          <div class="form-group">
+            <label for="cardFormDeck" class="form-label">Deck</label>
+            <select id="cardFormDeck" class="select-input" required></select>
+          </div>
+          <div class="form-group">
+            <label for="cardFormQuestion" class="form-label">Front (Question / Prompt / Term)</label>
+            <textarea id="cardFormQuestion" class="textarea-input" rows="3" placeholder="e.g., What is closure in JavaScript?" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="cardFormAnswer" class="form-label">Back (Answer / Explanation)</label>
+            <textarea id="cardFormAnswer" class="textarea-input" rows="4" placeholder="e.g., A function bundled with references to its surrounding lexical environment." required></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="btnCancelCardModal">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btnSaveCard">Save Card</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal: New Deck -->
+    <div class="modal-backdrop" id="deckModal" style="display: none;">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h3>Create New Study Deck</h3>
+          <button class="modal-close-btn" id="btnCloseDeckModal">✕</button>
+        </div>
+        <form id="deckForm" class="modal-body">
+          <div class="form-group">
+            <label for="deckFormName" class="form-label">Deck Title</label>
+            <input type="text" id="deckFormName" class="text-input" placeholder="e.g., Biology 101, Python Basics, Spanish Vocab" required>
+          </div>
+          <div class="form-group">
+            <label for="deckFormDesc" class="form-label">Short Description</label>
+            <input type="text" id="deckFormDesc" class="text-input" placeholder="e.g., Key concepts for the upcoming exam">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="btnCancelDeckModal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Deck</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Message</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
