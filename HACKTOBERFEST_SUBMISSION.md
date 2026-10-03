@@ -80,10 +80,7 @@ For educational software in particular, open innovation matters because:
 
 ## My Agent Session
 
-<!-- Embed your DevRelay session link below if you recorded the session: -->
-{% agent_session https://devrelay.io/session/your-session-id %}
-
-*During the development session, the agent and I designed the complete user journey, tested the SVG progress stroke calculations, fine-tuned the 3D card perspective matrix, and verified offline audio synthesis in real time.*
+*StudyBuddy was designed and developed through an autonomous agentic pair-programming workflow with AI. During the development session, the agent and I designed the complete user journey, tested the SVG progress stroke calculations, fine-tuned the 3D card perspective matrix, and verified offline audio synthesis in real time.*
 
 ---
 
